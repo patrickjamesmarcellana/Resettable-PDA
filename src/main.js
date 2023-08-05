@@ -5,6 +5,7 @@ let input_machine = []      // array of string input lines from text file
 let states = []             // array of state objects 
 let input_end_marker = '' 
 let initial_stack_symbol = ''
+let initial_state
 
 class State {
     constructor(name) {
@@ -40,6 +41,16 @@ class Transition {
         this.pop_symbol = pop_symbol
         this.next_state = next_state
         this.push_symbol = push_symbol
+    }
+}
+
+class Timeline {
+    constructor(input_head, curr_state, stack, is_accepted, is_dead) {
+        this.input_head = input_head // an integer corresponding to the current index in the input
+        this.curr_state = curr_state
+        this.stack = stack
+        this.is_accepted = is_accepted
+        this.is_dead = is_dead
     }
 }
 
@@ -87,6 +98,7 @@ function set_initial_state(input_machine) {
     const initial_state_name = input_machine[current_line_index]
     const state_index = search_state(initial_state_name)
     states[state_index].set_as_initial()
+    initial_state = states[state_index]
     current_line_index += 1
 }
 
@@ -131,5 +143,18 @@ set_reset_states(input_machine)
 
 /* INPUT TRACE */
 let input_string = get_input_string()
+let active_timelines = 0
+let accepted_timelines = 0
+let timelines = []
 
+// first transitions
+for(let transition of initial_state.transitions) {
+    const new_timeline = new Timeline(0, initial_state, [initial_stack_symbol], false, false)
+    timelines.push(new_timeline)
+    active_timelines += 1
+}
 
+// main loop
+while(active_timelines > 0 && accepted_timelines === 0) { // stops if there becomes an accepted timeline
+    // go to next set of transitions
+}
