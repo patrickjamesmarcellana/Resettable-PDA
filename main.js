@@ -84,7 +84,7 @@ function extract_transitions(input_machine) {
     current_line_index = 5 + transition_count // to be used in referencing the next components in input_machine
 }
 
-function set_initial(input_machine) {
+function set_initial_states(input_machine) {
     const initial_state_name = input_machine[current_line_index]
     const state_index = search_state(initial_state_name)
     states[state_index].set_as_initial()
@@ -97,7 +97,7 @@ function set_initial_stack_symbol(input_machine) {
     current_line_index += 1
 }
 
-function set_final(input_machine) {
+function set_final_states(input_machine) {
     const final_state_names = input_machine[current_line_index].split(",")
     for(state_name of final_state_names) {
         const state_index = search_state(state_name)
@@ -106,7 +106,7 @@ function set_final(input_machine) {
     current_line_index += 1
 }
 
-function set_reset(input_machine) {
+function set_reset_states(input_machine) {
     const reset_state_names = input_machine[current_line_index].split(",")
     for(state_name of reset_state_names) {
         const state_index = search_state(state_name)
@@ -120,10 +120,10 @@ read_file('sample_machine.txt')
 extract_states(input_machine)
 extract_end_marker(input_machine)
 extract_transitions(input_machine)
-set_initial(input_machine)
+set_initial_states(input_machine)
 set_initial_stack_symbol(input_machine)
-set_final(input_machine)
-set_reset(input_machine)
+set_final_states(input_machine)
+set_reset_states(input_machine)
 
 console.log(states)
 
