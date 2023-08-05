@@ -1,4 +1,5 @@
 const fs = require('fs')    // file-system
+const readlineSync = require('readline-sync')
 
 let input_machine = []      // array of string input lines from text file
 let states = []             // array of state objects 
@@ -112,8 +113,14 @@ function set_reset_states(input_machine) {
     current_line_index += 1
 }
 
-/* EXTRACT MACHINE FROM FILE */
+function get_input_string() {
+    return readlineSync.question('Enter input string: ') + input_end_marker
+}
+
+/* READ MACHINE DEFINITION FILE */
 read_file('sample_machine.txt')
+
+/* CONVERT MACHINE INTO INTERNAL REPRESENTATION */
 extract_states(input_machine)
 extract_end_marker(input_machine)
 extract_transitions(input_machine)
@@ -122,6 +129,7 @@ get_initial_stack_symbol(input_machine)
 set_final_states(input_machine)
 set_reset_states(input_machine)
 
-console.log(states)
+/* INPUT TRACE */
+let input_string = get_input_string()
 
 
