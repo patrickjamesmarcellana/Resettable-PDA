@@ -115,7 +115,7 @@ function set_reset(input_machine) {
     current_line_index += 1
 }
 
-
+/* EXTRACT MACHINE FROM FILE */
 read_file('sample_machine.txt')
 extract_states(input_machine)
 extract_end_marker(input_machine)
