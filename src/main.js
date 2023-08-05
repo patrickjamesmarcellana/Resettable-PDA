@@ -3,9 +3,7 @@ const fs = require('fs')    // file-system
 let input_machine = []      // array of string input lines from text file
 let states = []             // array of state objects 
 let input_end_marker = '' 
-let current_line_index = 0
-
-let stack = []
+let initial_stack_symbol = ''
 
 class State {
     constructor(name) {
@@ -84,16 +82,15 @@ function extract_transitions(input_machine) {
     current_line_index = 5 + transition_count // to be used in referencing the next components in input_machine
 }
 
-function set_initial_states(input_machine) {
+function set_initial_state(input_machine) {
     const initial_state_name = input_machine[current_line_index]
     const state_index = search_state(initial_state_name)
     states[state_index].set_as_initial()
     current_line_index += 1
 }
 
-function set_initial_stack_symbol(input_machine) {
-    const stack_symbol = input_machine[current_line_index]
-    stack.push(stack_symbol)
+function get_initial_stack_symbol(input_machine) {
+    initial_stack_symbol = input_machine[current_line_index]
     current_line_index += 1
 }
 
@@ -120,8 +117,8 @@ read_file('sample_machine.txt')
 extract_states(input_machine)
 extract_end_marker(input_machine)
 extract_transitions(input_machine)
-set_initial_states(input_machine)
-set_initial_stack_symbol(input_machine)
+set_initial_state(input_machine)
+get_initial_stack_symbol(input_machine)
 set_final_states(input_machine)
 set_reset_states(input_machine)
 
