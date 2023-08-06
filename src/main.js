@@ -143,7 +143,6 @@ function display_timelines(timelines) {
             console.log('TIMELINE ACCEPTED')
         } else if(timelines[i].is_dead) {
             console.log('TIMELINE IS DEAD') // timeline may or may not be removed in the next sequence of displaying timelines
-            timelines.splice(i, 1) // remove the timeline
         }
         console.log('')
     }
@@ -153,7 +152,7 @@ function display_timelines(timelines) {
 }
 
 /* READ MACHINE DEFINITION FILE */
-read_file('sample_machine.txt')
+read_file('sample_machine_2.txt')
 
 /* CONVERT MACHINE INTO INTERNAL REPRESENTATION */
 extract_states(input_machine)
@@ -177,8 +176,14 @@ display_timelines(timelines)
 
 // main loop
 while(timelines.length > 0 && accepted_timelines === 0) { // stops if there becomes an accepted timeline
-    // go to next set of transitions: store and delete existing timelines
-    let existing_timelines = timelines
+    // go to next set of transitions:  delete dead timelines
+    let existing_timelines = []
+    for(let i = 0; i < timelines.length; i++) {
+        if(timelines[i].is_dead) 
+            continue
+        else
+            existing_timelines.push(timelines[i])
+    }
     timelines = []
 
     // add new set of timelines by getting the next set of transitions
@@ -216,14 +221,13 @@ while(timelines.length > 0 && accepted_timelines === 0) { // stops if there beco
 
         // make new timelines per each transition
         for(let transition of valid_transitions) {
-            let new_stack = timeline.stack
+            let new_stack = timeline.stack.slice()
             let new_input_head = timeline.input_head
             let new_curr_state = timeline.curr_state
 
             if(transition.input === input_string[timeline.input_head]) {
                 new_input_head += 1
             }
-
             if(transition.pop_symbol === '&' && transition.push_symbol !== '&') {
                 // case where the transition will only push to the stack
                 new_stack.push(transition.push_symbol)
@@ -241,7 +245,7 @@ while(timelines.length > 0 && accepted_timelines === 0) { // stops if there beco
                 new_stack = ['Z']
                 new_input_head = 0
             }
-            const new_timeline = new Timeline(new_input_head, new_curr_state, new_stack, false, false)
+            let new_timeline = new Timeline(new_input_head, new_curr_state, new_stack, false, false)
             timelines.push(new_timeline)
         }
     }

@@ -3,8 +3,8 @@ A,B,C,D,E,F,G,H		/* list of states */
 $					/* input end-marker */
 Z,0					/* list of stack symbols */
 13					/* number of transitions */
-A,0,&,B,0			/* transition i format: curr_state,input_symbol,pop_stack_symbol,next_state,push_stack_symbol (assume & = λ)*/
-A,$,Z,H,&
+A,0,&,B,0			/* transition format: curr_state,input_symbol,pop_stack_symbol,next_state,push_stack_symbol */
+A,$,Z,H,&			/* to use lambda, assume & = λ */
 B,0,&,B,0
 B,1,0,C,&
 C,1,0,C,&
@@ -18,4 +18,4 @@ G,2,0,G,&
 G,$,Z,H,&
 A					/* initial state */
 H					/* accepting states */
-D					/* reset states */
+D					/* reset states; leave blank if no reset states, but line must exist*/
