@@ -129,6 +129,27 @@ function get_input_string() {
     return readlineSync.question('Enter input string: ') + input_end_marker
 }
 
+function display_timelines(timelines) {
+    for(let i = 0; i < timelines.length; i++) {
+        console.log('Active Timeline ' + i + ":")
+        console.log('Input String: ' + input_string)
+        console.log('Input Head: ' + timelines[i].input_head) // change this to highlighted symbol in the input string in the gui
+        console.log('Stack: ' + timelines[i].stack)
+        console.log('Current State: ' + timelines[i].curr_state.name) // not needed 
+
+        if(timelines[i].is_accepted) {
+            console.log('TIMELINE ACCEPTED')
+        } else if(timelines[i].is_dead) {
+            console.log('TIMELINE IS DEAD') // timeline may or may not be removed in the next sequence of displaying timelines
+            timelines.splice(i, 1) // remove the timeline
+        }
+        console.log('')
+    }
+
+    console.log('='.repeat(50))
+
+}
+
 /* READ MACHINE DEFINITION FILE */
 read_file('sample_machine.txt')
 
@@ -143,18 +164,84 @@ set_reset_states(input_machine)
 
 /* INPUT TRACE */
 let input_string = get_input_string()
-let active_timelines = 0
 let accepted_timelines = 0
 let timelines = []
 
-// first transitions
-for(let transition of initial_state.transitions) {
-    const new_timeline = new Timeline(0, initial_state, [initial_stack_symbol], false, false)
-    timelines.push(new_timeline)
-    active_timelines += 1
-}
+// first timeline at initial state
+const new_timeline = new Timeline(0, initial_state, [initial_stack_symbol], false, false)
+timelines.push(new_timeline)
+
+display_timelines(timelines)
 
 // main loop
-while(active_timelines > 0 && accepted_timelines === 0) { // stops if there becomes an accepted timeline
-    // go to next set of transitions
+while(timelines.length > 0 && accepted_timelines === 0) { // stops if there becomes an accepted timeline
+    // go to next set of transitions: store and delete existing timelines
+    let existing_timelines = timelines
+    timelines = []
+
+    // add new set of timelines by getting the next set of transitions
+    for(let timeline of existing_timelines) {
+        const curr_state = timeline.curr_state
+        const transitions = curr_state.transitions
+        let valid_transitions = []
+
+        // filter valid transitions
+        for(let transition of transitions) {
+            if(transition.input === input_string[timeline.input_head] || transition.input === '&') { // internal lambda representation is '&'
+                if(transition.pop_symbol === '&') {
+                    valid_transitions.push(transition)
+                } else if(transition.push_symbol === '&' &&
+                          transition.pop_symbol === timeline.stack[timeline.stack.length - 1]) {
+                    valid_transitions.push(transition)
+                }
+            }
+        }
+
+        // check if timeline is accepted already
+        if(timeline.stack.length === 0 && timeline.input_head === input_string.length) {
+            timeline.is_accepted = true
+            timelines.push(timeline)
+            accepted_timelines += 1
+            continue
+        }
+
+        // check if timeline is dead
+        if(valid_transitions.length === 0 && timeline.is_accepted === false) {
+            timeline.is_dead = true
+            timelines.push(timeline) // for display purposes
+            continue
+        }
+
+        // make new timelines per each transition
+        for(let transition of valid_transitions) {
+            let new_stack = timeline.stack
+            let new_input_head = timeline.input_head
+            let new_curr_state = timeline.curr_state
+
+            if(transition.input === input_string[timeline.input_head]) {
+                new_input_head += 1
+            }
+
+            if(transition.pop_symbol === '&' && transition.push_symbol !== '&') {
+                // case where the transition will only push to the stack
+                new_stack.push(transition.push_symbol)
+            } else if(transition.push_symbol === '&' && transition.pop_symbol !== '&') { 
+                // pop symbol already guaranteed to be valid by the filter valid transitions above
+                // case where the transition will only pop the stack
+                new_stack.pop()
+            }
+
+            // case where both push and pop = '&' is already handled through this and the moving of input head
+            new_curr_state = states[search_state(transition.next_state)]
+
+            // check if the new current state is a reset state
+            if(new_curr_state.is_reset) {
+                new_stack = ['Z']
+                new_input_head = 0
+            }
+            const new_timeline = new Timeline(new_input_head, new_curr_state, new_stack, false, false)
+            timelines.push(new_timeline)
+        }
+    }
+    display_timelines(timelines)
 }
