@@ -118,6 +118,8 @@ function set_final_states(input_machine) {
 
 function set_reset_states(input_machine) {
     const reset_state_names = input_machine[current_line_index].split(",")
+    if(reset_state_names[0] === '')  // if there are no reset states specified
+        return
     for(state_name of reset_state_names) {
         const state_index = search_state(state_name)
         states[state_index].set_as_reset()
