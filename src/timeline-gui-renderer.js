@@ -1,3 +1,10 @@
+/*
+    GROUP MEMBERS:
+    Chua, Harvey Shawn
+    Marcellana, Patrick James
+    Mider, Brett Harley
+*/
+
 const pages_container = document.querySelector("#pages-container")
 
 const set_page = (page) => {

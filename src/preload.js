@@ -1,3 +1,10 @@
+/*
+    GROUP MEMBERS:
+    Chua, Harvey Shawn
+    Marcellana, Patrick James
+    Mider, Brett Harley
+*/
+
 const { contextBridge, ipcRenderer } = require('electron')
 
 contextBridge.exposeInMainWorld('electronAPI', {
