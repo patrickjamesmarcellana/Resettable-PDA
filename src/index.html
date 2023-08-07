@@ -3,6 +3,7 @@
         <title>Resettable PDA</title>
         <template id="timeline-template">
             <div class="timeline-container">
+                <span class="timeline-message"></span>
                 <div>
                     <span class="timeline-state"></span>
                     <span class="timeline-input"></span>
@@ -15,21 +16,62 @@
         <style>
             .timelines-page {
                 border: 1px solid aquamarine;
-                padding: 1rem;
+                padding: 0.5rem;
             }
             .timeline-container {
                 border: 1px solid black;
                 border-radius: 2px;
                 margin-bottom: 2rem;
+
+                /* for message tooltip absolute positioning to work */
+                position: relative;
+            }
+            .timeline-message {
+                position: absolute;
+                top: -1rem;
+                display: inline-block;
+                z-index: 999;
+
+                background-color: black;
+                color: white;
+            }
+            .timeline-container > div {
+                display: flex;
+                align-items: center;
+                
+                min-height: 1rem;
+                padding: 0.5rem;
+            }
+            .timeline-state {
+                border: 1px solid black;
+                border-radius: 100%;
+                
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 2rem;
+                height: 2rem;
+                margin-right: 1rem;
+
             }
             .input-head-mark {
                 color: red;
             }
+
             .accepted {
-                background-color: forestgreen;
+                background-color: lightgreen;
             }
+
+            .accepted:hover > .timeline-message:before {
+                content: "Accepted timeline"
+            }
+
             .dead {
-                background-color: lightslategray;
+                background-color: lightcoral;
+            }
+
+            .dead:hover > .timeline-message:before {
+                content: "Dead timeline"
             }
 
             #load-file {
