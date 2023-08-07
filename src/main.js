@@ -290,7 +290,7 @@ module.exports = {
                 const timeline_display = {
                     input_head: timelines[i].input_head,
                     state: timelines[i].curr_state.name,
-                    stack: timelines[i].stack,
+                    stack: [...timelines[i].stack].reverse(),
                     status: status,
                 }
                 electronWindow.webContents.send("RENDER_TL", input_string, timeline_display)
