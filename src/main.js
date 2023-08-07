@@ -290,12 +290,23 @@ module.exports = {
                 const timeline_display = {
                     input_head: timelines[i].input_head,
                     state: timelines[i].curr_state.name,
-                    stack: timelines[i].stack,
+                    stack: [...timelines[i].stack].reverse(),
                     status: status,
                 }
                 electronWindow.webContents.send("RENDER_TL", input_string, timeline_display)
             }
         }
+
+        /* RESET GLOBAL VARIABLES */
+        input_machine = []
+        states = []
+        input_end_marker = '' 
+        initial_stack_symbol = ''
+        initial_state = null
+
+        input_string = null
+        accepted_timelines = null
+        timelines = null
 
         /* READ MACHINE DEFINITION FILE */
         read_file(file_path)

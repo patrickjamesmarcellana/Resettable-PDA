@@ -75,6 +75,7 @@ load_file_button.addEventListener("click", () => {
     window.electronAPI.load_file(null)
 })
 document.querySelector("#submit").addEventListener("click", () => {
+    pages_container.innerHTML = ""
     window.electronAPI.load_machine(document.querySelector("#input-string").value)
     set_page(1)
 })
