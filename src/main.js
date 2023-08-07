@@ -1,3 +1,10 @@
+/*
+    GROUP MEMBERS:
+    Chua, Harvey Shawn
+    Marcellana, Patrick James
+    Mider, Brett Harley
+*/
+
 const fs = require('fs')    // file-system
 
 let input_machine = []      // array of string input lines from text file
