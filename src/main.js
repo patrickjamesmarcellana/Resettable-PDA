@@ -1,5 +1,4 @@
 const fs = require('fs')    // file-system
-const readlineSync = require('readline-sync')
 
 let input_machine = []      // array of string input lines from text file
 let states = []             // array of state objects 
@@ -131,10 +130,6 @@ function set_reset_states(input_machine) {
     current_line_index += 1
 }
 
-function get_input_string() {
-    return readlineSync.question('Enter input string: ') + input_end_marker
-}
-
 function display_timelines(timelines) {
     for(let i = 0; i < timelines.length; i++) {
         console.log('Active Timeline ' + i + ":")
@@ -244,6 +239,11 @@ function run_rpda() {
 
 // detect CLI
 if(require.main === module) {
+    const readlineSync = require('readline-sync')
+    function get_input_string() {
+        return readlineSync.question('Enter input string: ') + input_end_marker
+    }
+
     /* READ MACHINE DEFINITION FILE */
     read_file('sample_machine_2.txt')
     parse_input()
@@ -267,7 +267,7 @@ if(require.main === module) {
 }
 
 module.exports = {
-    load_test_script: (electronWindow) => {
+    load_test_script: (electronWindow, given_input_string) => {
         const display_timelines_gui = () => {
             electronWindow.webContents.send("CREATE_PAGE")
             for(let i = 0; i < timelines.length; i++) {
@@ -295,7 +295,7 @@ module.exports = {
         parse_input()
 
         /* INPUT TRACE */
-        input_string = get_input_string()
+        input_string = given_input_string
         accepted_timelines = 0
         timelines = []
 

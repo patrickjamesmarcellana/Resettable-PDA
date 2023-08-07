@@ -33,3 +33,7 @@ window.electronAPI.render_timeline((event, input, timeline) => {
     }
 
 })
+
+document.querySelector("#submit").addEventListener("click", () => {
+    window.electronAPI.load_machine(document.querySelector("#input-string").value)
+})

@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 const { load_test_script } = require('./main')
 
@@ -19,7 +19,9 @@ const createWindow = () => {
 app.whenReady().then(() => {
     const electronWindow = createWindow()
     electronWindow.webContents.on("did-finish-load", () => {
-        load_test_script(electronWindow)
+        ipcMain.on("LOAD_MACHINE", (event, given_input_string) => {
+            load_test_script(electronWindow, given_input_string)
+        })
     })
 })
 
