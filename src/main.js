@@ -267,7 +267,7 @@ if(require.main === module) {
 }
 
 module.exports = {
-    load_test_script: (electronWindow, given_input_string) => {
+    load_test_script: (electronWindow, file_path, given_input_string) => {
         const display_timelines_gui = () => {
             electronWindow.webContents.send("CREATE_PAGE")
             for(let i = 0; i < timelines.length; i++) {
@@ -291,7 +291,7 @@ module.exports = {
         }
 
         /* READ MACHINE DEFINITION FILE */
-        read_file('sample_machine_2.txt')
+        read_file(file_path)
         parse_input()
 
         /* INPUT TRACE */

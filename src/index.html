@@ -31,12 +31,23 @@
             .dead {
                 background-color: lightslategray;
             }
+
+            #load-file {
+                width: 100%;
+                height: 15%;
+                background-color: wheat;
+            }
         </style>
         <script src="timeline-gui-renderer.js" defer></script>
     </head>
     <body>
         <div>
+            <button id="load-file">Drag a file to open or click here to browse</button>
+            <span id="file-path"></span>
+        </div>
+        <div>
             <input id="input-string" type="text">
+            
             <button id="submit">Submit</button>
         </div>
         <div id="timelines"></div>
