@@ -7,3 +7,4 @@
 5. Two sample files are included in this folder, `sample_machine.txt` and `sample_machine_2.txt`.
    The first one is a machine designed for the language that accepts strings in the format 0^n1^n2^n.
    The second one is a PDA machine simulated using an RPDA machine, and it is the language defined in Problem Set #2, Item No. 6.
+6. To utilize the GUI, a slider is provided to scroll between the time units of the timelines. An accept verdict is shown if a timeline turns into green. Meanwhile, a reject verdict is shown if a timeline becomes red. Note that the final step may be the machine removing the rejected timeline. Hence, if you scroll all the way to the end and see no output, try moving back 1 time unit.
