@@ -302,7 +302,7 @@ module.exports = {
         parse_input()
 
         /* INPUT TRACE */
-        input_string = given_input_string
+        input_string = given_input_string + input_end_marker
         accepted_timelines = 0
         timelines = []
 
