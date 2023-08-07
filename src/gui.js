@@ -1,3 +1,10 @@
+/*
+    GROUP MEMBERS:
+    Chua, Harvey Shawn
+    Marcellana, Patrick James
+    Mider, Brett Harley
+*/
+
 const fs = require('fs')    // file-system
 const { app, BrowserWindow, dialog, ipcMain } = require('electron')
 const path = require('path')
