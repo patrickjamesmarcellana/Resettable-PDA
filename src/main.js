@@ -328,5 +328,11 @@ module.exports = {
             run_rpda()
             display_timelines_gui(timelines)
         }
+
+        if(accepted_timelines === 0) {
+            electronWindow.webContents.send("SET_MSG", "Input rejected.")
+        } else {
+            electronWindow.webContents.send("SET_MSG", "Input accepted.")
+        }
     }
 }

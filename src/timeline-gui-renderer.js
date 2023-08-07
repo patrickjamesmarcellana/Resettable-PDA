@@ -60,6 +60,10 @@ window.electronAPI.change_file_path((event, file_path) => {
     document.querySelector("#file-path").textContent = file_path
 })
 
+window.electronAPI.set_message((event, msg) => {
+    document.querySelector("#message").textContent = msg
+})
+
 const load_file_button = document.querySelector("#load-file")
 load_file_button.addEventListener("dragover", (event) => {
     event.preventDefault()
