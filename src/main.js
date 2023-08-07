@@ -7,6 +7,10 @@ let input_end_marker = ''
 let initial_stack_symbol = ''
 let initial_state
 
+let input_string
+let accepted_timelines
+let timelines
+
 class State {
     constructor(name) {
         this.name = name
@@ -55,7 +59,7 @@ class Timeline {
 }
 
 function read_file(filename) {
-    input_machine = fs.readFileSync(filename).toString('UTF8').split("\r\n")
+    input_machine = fs.readFileSync(filename).toString('UTF8').split(/\r?\n/)
 }
 
 function extract_states(input_machine) {
@@ -151,31 +155,18 @@ function display_timelines(timelines) {
 
 }
 
-/* READ MACHINE DEFINITION FILE */
-read_file('sample_machine_2.txt')
+function parse_input() {
+    /* CONVERT MACHINE INTO INTERNAL REPRESENTATION */
+    extract_states(input_machine)
+    extract_end_marker(input_machine)
+    extract_transitions(input_machine)
+    set_initial_state(input_machine)
+    get_initial_stack_symbol(input_machine)
+    set_final_states(input_machine)
+    set_reset_states(input_machine)
+}
 
-/* CONVERT MACHINE INTO INTERNAL REPRESENTATION */
-extract_states(input_machine)
-extract_end_marker(input_machine)
-extract_transitions(input_machine)
-set_initial_state(input_machine)
-get_initial_stack_symbol(input_machine)
-set_final_states(input_machine)
-set_reset_states(input_machine)
-
-/* INPUT TRACE */
-let input_string = get_input_string()
-let accepted_timelines = 0
-let timelines = []
-
-// first timeline at initial state
-const new_timeline = new Timeline(0, initial_state, [initial_stack_symbol], false, false)
-timelines.push(new_timeline)
-
-display_timelines(timelines)
-
-// main loop
-while(timelines.length > 0 && accepted_timelines === 0) { // stops if there becomes an accepted timeline
+function run_rpda() {
     // go to next set of transitions:  delete dead timelines
     let existing_timelines = []
     for(let i = 0; i < timelines.length; i++) {
@@ -249,5 +240,75 @@ while(timelines.length > 0 && accepted_timelines === 0) { // stops if there beco
             timelines.push(new_timeline)
         }
     }
+}
+
+// detect CLI
+if(require.main === module) {
+    /* READ MACHINE DEFINITION FILE */
+    read_file('sample_machine_2.txt')
+    parse_input()
+
+    /* INPUT TRACE */
+    input_string = get_input_string()
+    accepted_timelines = 0
+    timelines = []
+
+    // first timeline at initial state
+    const new_timeline = new Timeline(0, initial_state, [initial_stack_symbol], false, false)
+    timelines.push(new_timeline)
+
     display_timelines(timelines)
+
+    // main loop
+    while(timelines.length > 0 && accepted_timelines === 0) { // stops if there becomes an accepted timeline
+        run_rpda()
+        display_timelines(timelines)
+    }
+}
+
+module.exports = {
+    load_test_script: (electronWindow) => {
+        const display_timelines_gui = () => {
+            electronWindow.webContents.send("CREATE_PAGE")
+            for(let i = 0; i < timelines.length; i++) {
+                let status = ""
+        
+                if(timelines[i].is_accepted) {
+                    status = "accepted"
+                } else if (timelines[i].is_dead) {
+                    status = "dead"
+                }
+        
+                // convert to a serializable format
+                const timeline_display = {
+                    input_head: timelines[i].input_head,
+                    state: timelines[i].curr_state.name,
+                    stack: timelines[i].stack,
+                    status: status,
+                }
+                electronWindow.webContents.send("RENDER_TL", input_string, timeline_display)
+            }
+        }
+
+        /* READ MACHINE DEFINITION FILE */
+        read_file('sample_machine_2.txt')
+        parse_input()
+
+        /* INPUT TRACE */
+        input_string = get_input_string()
+        accepted_timelines = 0
+        timelines = []
+
+        // first timeline at initial state
+        const new_timeline = new Timeline(0, initial_state, [initial_stack_symbol], false, false)
+        timelines.push(new_timeline)
+
+        display_timelines_gui(timelines)
+
+        // main loop
+        while(timelines.length > 0 && accepted_timelines === 0) { // stops if there becomes an accepted timeline
+            run_rpda()
+            display_timelines_gui(timelines)
+        }
+    }
 }

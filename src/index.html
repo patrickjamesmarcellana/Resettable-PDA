@@ -1,0 +1,40 @@
+<html>
+    <head>
+        <title>Resettable PDA</title>
+        <template id="timeline-template">
+            <div class="timeline-container">
+                <div>
+                    <span class="timeline-state"></span>
+                    <span class="timeline-input"></span>
+                </div>
+                <div>
+                    <span class="timeline-stack"></span>
+                </div>
+            </div>
+        </template>
+        <style>
+            .timelines-page {
+                border: 1px solid aquamarine;
+                padding: 1rem;
+            }
+            .timeline-container {
+                border: 1px solid black;
+                border-radius: 2px;
+                margin-bottom: 2rem;
+            }
+            .input-head-mark {
+                color: red;
+            }
+            .accepted {
+                background-color: forestgreen;
+            }
+            .dead {
+                background-color: lightslategray;
+            }
+        </style>
+        <script src="timeline-gui-renderer.js" defer></script>
+    </head>
+    <body>
+        <div id="timelines"></div>
+    </body>
+</html> 
