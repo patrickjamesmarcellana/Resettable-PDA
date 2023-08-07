@@ -34,6 +34,8 @@ app.whenReady().then(() => {
             }
 
             console.log("loaded", current_file_path)
+
+            electronWindow.webContents.send("CHANGE_FP", fs.existsSync(current_file_path) ? current_file_path : "Invalid path.")
         })
 
         ipcMain.on("LOAD_MACHINE", (event, given_input_string) => {
